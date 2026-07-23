@@ -2,10 +2,10 @@
 
 A box-breathing companion for Android that does exactly one thing, beautifully.
 
-Tap the screen to begin. A luminous orb breathes with you — swelling on the
-inhale, holding full, settling on the exhale, holding empty — while a glowing
-comet traces the four sides of a square, one side per phase. Tap again to stop.
-That's the whole app.
+Tap the screen to begin. The whole screen is a field of fireflies, and the
+field breathes with you — brightening and turning a vivid green as you inhale,
+settling into a muted sage as you exhale. Tap again to stop. That's the whole
+app.
 
 **Box breathing** (a.k.a. square breathing) is a 4–4–4–4 pattern used by
 clinicians, athletes, and first responders to steady the nervous system:
@@ -24,18 +24,21 @@ stays awake while a session runs (no wake-lock permission required).
 
 ## The animation
 
-Everything is drawn on a single Compose `Canvas` from one frame clock:
+Everything is drawn on a single Compose `Canvas` from one frame clock — a
+full-screen field of ~420 fireflies:
 
-- a **breathing orb** — a layered radial-gradient sphere with core, rim, and a
-  lit-from-above highlight — scaled by eased inhale/exhale
-- the **box** — a faint rounded square the comet traces at constant speed, one
-  lap per 16-second cycle
-- a **comet** with a fading tail marking your progress around the box
-- **ripples** cast off at each phase boundary
-- an **ambient mote field** that drifts, twinkles, and gently inhales with you
-- a **breath glow** that blooms behind the orb
-- an accent hue that **glides** through the Catppuccin Mocha palette across the
-  breath (blue → lavender → teal → sapphire)
+- **depth-layered**: distant lights are tiny, dim, and slow; near ones are
+  larger, brighter, and carry a soft halo
+- each firefly **rises on warm air** (70 seconds to 4 minutes per screen,
+  wrapping seamlessly) and **wanders** on two-octave sine paths, so nothing
+  ever moves in a straight line
+- each **blinks** on its own slow, dreamy clock, and every few minutes swells
+  through a long soft **flare** — somewhere on screen one is always blooming
+- the **breath is the whole field**: on the inhale everything brightens and
+  gently swells; on the exhale it settles and dims — Catppuccin Mocha greens,
+  from muted sage (empty) to vivid green cresting into mint (full)
+- a **vignette** sinks the edges into the night, and an edgeless central bloom
+  glows faintly with the lungs
 
 The timing model (`breath/BreathCycle.kt`) is pure, Android-free, and
 unit-tested, so the cadence stays exact.
