@@ -7,6 +7,12 @@ field breathes with you — brightening and turning a vivid green as you inhale,
 settling into a muted sage as you exhale. Tap again to stop. That's the whole
 app.
 
+**🌐 Live on the web: [halcyon.netslum.io](https://halcyon.netslum.io)** — the
+same scene remastered for bigger screens ([`docs/index.html`](docs/index.html),
+a dependency-free canvas port of the same timing model and field). It works
+offline and installs to the home screen as a PWA on iPhone and Android
+(Share → *Add to Home Screen* on iOS, *Install app* on Android).
+
 <p align="center">
   <img src="docs/screenshots/idle.png" width="300" alt="Idle — a dark field of faint fireflies, 'Tap to begin'">
   &nbsp;&nbsp;&nbsp;
