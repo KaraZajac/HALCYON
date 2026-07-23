@@ -16,15 +16,19 @@ private val Subtext = Color(0xFFA6ADC8)
 private val Blue = Color(0xFF89B4FA)
 private val Mauve = Color(0xFFCBA6F7)
 
-// Breath-phase accent anchors, exposed for the animation.
+// Surface anchors exposed for the animation.
 val HalcyonBase = Base
 val HalcyonCrust = Crust
-val HalcyonBlue = Blue          // inhale
-val HalcyonLavender = Color(0xFFB4BEFE) // hold (full)
-val HalcyonTeal = Color(0xFF94E2D5)     // exhale
-val HalcyonSapphire = Color(0xFF74C7EC) // hold (empty)
 val HalcyonText = Text
 val HalcyonSubtext = Subtext
+
+// The breath is green, and its vibrancy tracks the lungs: muted + dark when
+// empty, vivid + luminous when full. Anchored on Catppuccin Mocha's greens.
+val HalcyonGreenEmpty = Color(0xFF3E5A4A)  // breathed out — muted, low sage
+val HalcyonGreenMid = Color(0xFF74C79E)    // transition green
+val HalcyonGreenFull = Color(0xFFA6E3A1)   // Catppuccin Green — vibrant
+val HalcyonGreenPeak = Color(0xFFCFF7C4)   // the crest of a full inhale — bright mint
+val HalcyonMint = Color(0xFFB9F0C4)         // spark/highlight tint
 
 private val MochaScheme = darkColorScheme(
     primary = Blue,
