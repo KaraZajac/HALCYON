@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Catppuccin Mocha. HALCYON is dark regardless of system setting. -->
+    <color name="bg_dark">#181825</color>
+    <color name="ic_bg">#1E1E2E</color>
+</resources>

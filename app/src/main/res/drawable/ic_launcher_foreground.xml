@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- The box (traced square of box breathing) -->
+    <path
+        android:pathData="M42,30 h24 a12,12 0 0 1 12,12 v24 a12,12 0 0 1 -12,12 h-24 a12,12 0 0 1 -12,-12 v-24 a12,12 0 0 1 12,-12 Z"
+        android:strokeColor="#B4BEFE"
+        android:strokeWidth="2.5"
+        android:strokeAlpha="0.85"
+        android:fillColor="#00000000" />
+
+    <!-- The breathing orb -->
+    <path
+        android:pathData="M39,54 a15,15 0 1 0 30,0 a15,15 0 1 0 -30,0 Z"
+        android:fillColor="#89B4FA"
+        android:fillAlpha="0.95" />
+
+    <!-- Soft inner highlight on the orb -->
+    <path
+        android:pathData="M46,48 a6,6 0 1 0 12,0 a6,6 0 1 0 -12,0 Z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.25" />
+
+    <!-- The traveling comet on the box -->
+    <path
+        android:pathData="M73,42 a5,5 0 1 0 10,0 a5,5 0 1 0 -10,0 Z"
+        android:fillColor="#94E2D5" />
+</vector>
