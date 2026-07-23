@@ -7,6 +7,12 @@ field breathes with you — brightening and turning a vivid green as you inhale,
 settling into a muted sage as you exhale. Tap again to stop. That's the whole
 app.
 
+<p align="center">
+  <img src="docs/screenshots/idle.png" width="300" alt="Idle — a dark field of faint fireflies, 'Tap to begin'">
+  &nbsp;&nbsp;&nbsp;
+  <img src="docs/screenshots/session.png" width="300" alt="Mid-inhale — the field glowing green, 'BREATHE IN · 3'">
+</p>
+
 **Box breathing** (a.k.a. square breathing) is a 4–4–4–4 pattern used by
 clinicians, athletes, and first responders to steady the nervous system:
 

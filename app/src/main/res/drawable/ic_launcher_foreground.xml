@@ -1,32 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- A firefly field in miniature: a loose cluster of glowing green points,
+     dense toward the middle, dissolving outward — the app's animation, still.
+     Everything sits inside the adaptive-icon safe zone (~33dp of center). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- The box (traced square of box breathing) -->
+    <!-- Hero firefly + halo -->
     <path
-        android:pathData="M42,30 h24 a12,12 0 0 1 12,12 v24 a12,12 0 0 1 -12,12 h-24 a12,12 0 0 1 -12,-12 v-24 a12,12 0 0 1 12,-12 Z"
-        android:strokeColor="#B4BEFE"
-        android:strokeWidth="2.5"
-        android:strokeAlpha="0.85"
-        android:fillColor="#00000000" />
+        android:pathData="M38,50 a14,14 0 1 0 28,0 a14,14 0 1 0 -28,0 Z"
+        android:fillColor="#A6E3A1"
+        android:fillAlpha="0.20" />
+    <path
+        android:pathData="M46.5,50 a5.5,5.5 0 1 0 11,0 a5.5,5.5 0 1 0 -11,0 Z"
+        android:fillColor="#A6E3A1" />
 
-    <!-- The breathing orb -->
+    <!-- Second, mint, lower right -->
     <path
-        android:pathData="M39,54 a15,15 0 1 0 30,0 a15,15 0 1 0 -30,0 Z"
-        android:fillColor="#89B4FA"
+        android:pathData="M56.5,63 a9.5,9.5 0 1 0 19,0 a9.5,9.5 0 1 0 -19,0 Z"
+        android:fillColor="#B9F0C4"
+        android:fillAlpha="0.18" />
+    <path
+        android:pathData="M62.2,63 a3.8,3.8 0 1 0 7.6,0 a3.8,3.8 0 1 0 -7.6,0 Z"
+        android:fillColor="#B9F0C4"
         android:fillAlpha="0.95" />
 
-    <!-- Soft inner highlight on the orb -->
+    <!-- Third, green, lower left -->
     <path
-        android:pathData="M46,48 a6,6 0 1 0 12,0 a6,6 0 1 0 -12,0 Z"
-        android:fillColor="#FFFFFF"
-        android:fillAlpha="0.25" />
+        android:pathData="M32.5,65 a7.5,7.5 0 1 0 15,0 a7.5,7.5 0 1 0 -15,0 Z"
+        android:fillColor="#A6E3A1"
+        android:fillAlpha="0.16" />
+    <path
+        android:pathData="M37,65 a3,3 0 1 0 6,0 a3,3 0 1 0 -6,0 Z"
+        android:fillColor="#A6E3A1"
+        android:fillAlpha="0.9" />
 
-    <!-- The traveling comet on the box -->
+    <!-- The bright near-white ember, upper right -->
     <path
-        android:pathData="M73,42 a5,5 0 1 0 10,0 a5,5 0 1 0 -10,0 Z"
-        android:fillColor="#94E2D5" />
+        android:pathData="M61.4,38 a2.6,2.6 0 1 0 5.2,0 a2.6,2.6 0 1 0 -5.2,0 Z"
+        android:fillColor="#CFF7C4"
+        android:fillAlpha="0.95" />
+
+    <!-- Smaller lights, fading with distance -->
+    <path
+        android:pathData="M35.8,42 a2.2,2.2 0 1 0 4.4,0 a2.2,2.2 0 1 0 -4.4,0 Z"
+        android:fillColor="#74C79E"
+        android:fillAlpha="0.8" />
+    <path
+        android:pathData="M73,50 a2,2 0 1 0 4,0 a2,2 0 1 0 -4,0 Z"
+        android:fillColor="#74C79E"
+        android:fillAlpha="0.7" />
+    <path
+        android:pathData="M46.2,76 a1.8,1.8 0 1 0 3.6,0 a1.8,1.8 0 1 0 -3.6,0 Z"
+        android:fillColor="#5E8F72"
+        android:fillAlpha="0.75" />
+    <path
+        android:pathData="M28.4,54 a1.6,1.6 0 1 0 3.2,0 a1.6,1.6 0 1 0 -3.2,0 Z"
+        android:fillColor="#5E8F72"
+        android:fillAlpha="0.65" />
+    <path
+        android:pathData="M56.5,28.5 a1.5,1.5 0 1 0 3,0 a1.5,1.5 0 1 0 -3,0 Z"
+        android:fillColor="#74C79E"
+        android:fillAlpha="0.6" />
+    <path
+        android:pathData="M68.6,74 a1.4,1.4 0 1 0 2.8,0 a1.4,1.4 0 1 0 -2.8,0 Z"
+        android:fillColor="#5E8F72"
+        android:fillAlpha="0.55" />
+    <path
+        android:pathData="M44.8,33 a1.2,1.2 0 1 0 2.4,0 a1.2,1.2 0 1 0 -2.4,0 Z"
+        android:fillColor="#5E8F72"
+        android:fillAlpha="0.5" />
+    <path
+        android:pathData="M80.8,60 a1.2,1.2 0 1 0 2.4,0 a1.2,1.2 0 1 0 -2.4,0 Z"
+        android:fillColor="#3E5A4A"
+        android:fillAlpha="0.8" />
+    <path
+        android:pathData="M25,68 a1.1,1.1 0 1 0 2.2,0 a1.1,1.1 0 1 0 -2.2,0 Z"
+        android:fillColor="#3E5A4A"
+        android:fillAlpha="0.8" />
 </vector>
