@@ -36,7 +36,6 @@ import androidx.compose.runtime.withFrameNanos
 import org.soulstone.halcyon.breath.PHASE_MS
 import org.soulstone.halcyon.breath.roundedRectPerimeterPoint
 import org.soulstone.halcyon.breath.stateAt
-import org.soulstone.halcyon.ui.theme.HalcyonCrust
 import org.soulstone.halcyon.ui.theme.HalcyonGreenEmpty
 import org.soulstone.halcyon.ui.theme.HalcyonGreenFull
 import org.soulstone.halcyon.ui.theme.HalcyonGreenMid
@@ -46,11 +45,13 @@ import org.soulstone.halcyon.ui.theme.HalcyonSubtext
 import org.soulstone.halcyon.ui.theme.HalcyonText
 import kotlin.math.cos
 import kotlin.math.floor
+import kotlin.math.ln
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 private const val TAU = 6.2831855f
-private const val AMBIENT = 140      // drifting background motes
-private const val RIM_SPARKS = 64    // embers lifting off the orb
+private const val FIREFLIES = 300    // points that form the breathing circle
+private const val AMBIENT = 56       // sparse far-field motes for depth
 private const val RIPPLE_LIFE_MS = 3_600f
 private const val TAIL = 18
 
@@ -59,8 +60,6 @@ private fun hash(n: Int): Float {
     val s = sin(n * 127.1f + 31.7f) * 43758.545f
     return s - floor(s)
 }
-
-private fun frac(x: Float): Float = x - floor(x)
 
 @Composable
 fun BreathingScreen() {
@@ -119,8 +118,8 @@ fun BreathingScreen() {
             drawBreath(nowMs, breathMs, runFactor)
         }
 
-        // Guidance text lives on the dark background below the box, never on the
-        // orb — so it stays legible no matter how bright the breath gets.
+        // Guidance text lives on the dark background below the box, never over the
+        // swarm — so it stays legible no matter how bright the breath gets.
         Guidance(
             running = running.value,
             breathNs = breathNs,
@@ -139,7 +138,7 @@ private fun DrawScope.drawBreath(nowMs: Float, breathMs: Float, runFactor: Float
 
     val st = stateAt(breathMs.toLong())
 
-    // Idle: a slow resting pulse so the orb keeps breathing gently when paused.
+    // Idle: a slow resting pulse so the swarm keeps breathing gently when paused.
     val idlePulse = 0.46f + 0.16f * sin(tSec * 0.55f)
     val fullness = (idlePulse + (st.fullness - idlePulse) * runFactor).coerceIn(0f, 1f)
 
@@ -153,57 +152,72 @@ private fun DrawScope.drawBreath(nowMs: Float, breathMs: Float, runFactor: Float
     val crest = ((fullness - 0.72f) / 0.28f).coerceIn(0f, 1f)
     val accent = lerp(base, HalcyonGreenPeak, 0.55f * crest)
 
-    val orbMax = minDim * 0.29f
-    val orbMin = orbMax * 0.40f
-    val orbR = orbMin + (orbMax - orbMin) * fullness
     val boxHalf = minDim * 0.40f
     val boxCorner = boxHalf * 0.28f
 
-    // 1. Breath glow — a soft radial bloom behind the orb that swells + brightens.
-    val glowR = orbR * (2.4f + 0.6f * fullness)
+    // The swarm's spread breathes: tight + small when empty, wide + open when full.
+    val sigma = minDim * (0.05f + 0.11f * fullness)
+    val cloudR = sigma * 2.4f   // nominal visible radius, for the glow + ripples
+
+    // 1. A soft luminous haze binds the swarm into one glowing circle without
+    //    ever drawing a hard edge — it just breathes brighter as you inhale.
+    val hazeR = cloudR * 1.5f
     drawCircle(
         brush = Brush.radialGradient(
             colors = listOf(
-                accent.copy(alpha = 0.04f + 0.26f * fullness),
+                accent.copy(alpha = 0.04f + 0.14f * fullness),
                 accent.copy(alpha = 0f),
             ),
             center = c,
-            radius = glowR,
+            radius = hazeR,
         ),
-        radius = glowR,
+        radius = hazeR,
         center = c,
     )
 
-    // 2. Ambient mote field — layered depth, drifting + twinkling, expanding and
-    //    brightening as you inhale, contracting + dimming as you exhale.
-    val breatheOut = 1f + 0.16f * fullness
+    // 2. Sparse far-field motes — faint depth beyond the swarm.
     for (i in 0 until AMBIENT) {
-        val depth = hash(i + 3)                       // 0 far .. 1 near (parallax)
-        val baseAng = hash(i + 7) * TAU
-        val baseRad = minDim * (0.15f + 0.68f * hash(i))
-        val spin = (hash(i + 11) - 0.5f) * 0.06f * (0.4f + depth)
-        val ang = baseAng + tSec * spin
-        val bob = sin(tSec * (0.18f + 0.28f * hash(i + 5)) + i) * minDim * 0.014f
-        val rad = baseRad * breatheOut + bob
-        val pos = Offset(c.x + cos(ang) * rad, c.y + sin(ang) * rad)
-        val twinkle = 0.5f + 0.5f * sin(tSec * (0.5f + hash(i + 13)) + i * 1.7f)
-        val bright = 0.35f + 0.65f * fullness
-        val a = (0.05f + 0.24f * depth) * (0.35f + 0.65f * twinkle) * bright
-        val sz = minDim * (0.0012f + 0.0055f * depth) * (0.85f + 0.3f * fullness)
-        val col = if (hash(i + 17) > 0.86f) HalcyonMint else accent
-        drawCircle(color = col.copy(alpha = a), radius = sz, center = pos)
+        val depth = hash(i + 3)
+        val ang = hash(i + 7) * TAU + tSec * (hash(i + 11) - 0.5f) * 0.04f
+        val rad = minDim * (0.30f + 0.55f * hash(i)) * (1f + 0.10f * fullness)
+        val bob = sin(tSec * (0.2f + 0.3f * hash(i + 5)) + i) * minDim * 0.012f
+        val pos = Offset(c.x + cos(ang) * (rad + bob), c.y + sin(ang) * (rad + bob))
+        val tw = 0.5f + 0.5f * sin(tSec * (0.5f + hash(i + 13)) + i * 1.7f)
+        val a = (0.04f + 0.12f * depth) * (0.4f + 0.6f * tw) * (0.4f + 0.6f * fullness)
+        val sz = minDim * (0.0011f + 0.0035f * depth)
+        drawCircle(color = accent.copy(alpha = a), radius = sz, center = pos)
     }
 
-    // 3. Rim sparks — embers that lift off the orb's surface and fade outward.
-    //    Denser and brighter on the inhale, so the orb feels alive and radiant.
-    for (j in 0 until RIM_SPARKS) {
-        val life = frac(tSec * (0.09f + 0.07f * hash(j + 31)) + hash(j + 33))
-        val ang = hash(j + 41) * TAU + tSec * 0.06f * (hash(j + 43) - 0.5f)
-        val rad = orbR * (0.9f + life * (0.85f + 0.5f * fullness))
-        val pos = Offset(c.x + cos(ang) * rad, c.y + sin(ang) * rad)
-        val a = (1f - life) * (0.06f + 0.34f * fullness) * (0.5f + 0.5f * hash(j + 45))
-        val sz = minDim * (0.0016f + 0.004f * hash(j + 47)) * (1f - 0.35f * life)
-        drawCircle(color = HalcyonMint.copy(alpha = a), radius = sz, center = pos)
+    // 3. THE CIRCLE — a swarm of fireflies. Positions form a soft gaussian cloud
+    //    (dense middle, edges that dissolve), each point drifting on its own path
+    //    and blinking on its own clock, so the circle shimmers and never hardens.
+    val wander = minDim * 0.02f
+    for (i in 0 until FIREFLIES) {
+        // Box–Muller gaussian → naturally soft, centre-weighted, undefined edge.
+        val u1 = hash(i * 2 + 1).coerceIn(1e-4f, 1f)
+        val u2 = hash(i * 2 + 2)
+        val mag = sqrt(-2f * ln(u1)).coerceAtMost(2.4f)
+        val ga = TAU * u2
+
+        // slow per-firefly wander so the swarm is alive, not a frozen scatter
+        val wph = hash(i + 101) * TAU
+        val wsp = 0.15f + 0.5f * hash(i + 103)
+        val hx = cos(ga) * mag * sigma + sin(tSec * wsp + wph) * wander
+        val hy = sin(ga) * mag * sigma + cos(tSec * wsp * 0.9f + wph) * wander
+        val pos = Offset(c.x + hx, c.y + hy)
+
+        // firefly blink — a staggered, sharpened pulse
+        val blink = 0.5f + 0.5f * sin(tSec * (0.6f + 1.3f * hash(i + 107)) + hash(i + 109) * TAU)
+        val glow = blink * blink
+        val bright = 0.4f + 0.6f * fullness
+        val a = ((0.14f + 0.86f * glow) * bright).coerceIn(0f, 1f)
+        val sz = minDim * (0.0015f + 0.0042f * hash(i + 111)) * (0.9f + 0.3f * fullness)
+        val col = when {
+            hash(i + 113) > 0.92f -> Color.White
+            hash(i + 115) > 0.68f -> HalcyonMint
+            else -> accent
+        }
+        drawCircle(color = col.copy(alpha = a), radius = sz, center = pos)
     }
 
     // 4. The box — faint rounded square the comet traces. Brightens with the session.
@@ -223,9 +237,9 @@ private fun DrawScope.drawBreath(nowMs: Float, breathMs: Float, runFactor: Float
             val age = breathMs - bMs
             if (age in 0f..RIPPLE_LIFE_MS) {
                 val f = age / RIPPLE_LIFE_MS
-                val r = orbMax * (0.9f + 1.6f * f)
+                val r = cloudR * (1.0f + 2.2f * f)
                 drawCircle(
-                    color = accent.copy(alpha = (1f - f) * 0.22f * runFactor),
+                    color = accent.copy(alpha = (1f - f) * 0.18f * runFactor),
                     radius = r,
                     center = c,
                     style = Stroke(width = minDim * 0.003f),
@@ -234,42 +248,7 @@ private fun DrawScope.drawBreath(nowMs: Float, breathMs: Float, runFactor: Float
         }
     }
 
-    // 6. The orb — a luminous green sphere: core, body, rim, and a soft highlight.
-    //    Core whitens with the inhale so a full breath reads as radiant, not pale.
-    val core = lerp(accent, Color.White, 0.14f + 0.20f * fullness)
-    val edge = lerp(accent, HalcyonCrust, 0.5f)
-    drawCircle(
-        brush = Brush.radialGradient(
-            colorStops = arrayOf(
-                0.0f to core.copy(alpha = 0.96f),
-                0.5f to accent.copy(alpha = 0.92f),
-                1.0f to edge.copy(alpha = 0.9f),
-            ),
-            center = c,
-            radius = orbR,
-        ),
-        radius = orbR,
-        center = c,
-    )
-    // inner highlight, offset up-left, for a lit-from-above read
-    val hl = Offset(c.x - orbR * 0.3f, c.y - orbR * 0.34f)
-    drawCircle(
-        brush = Brush.radialGradient(
-            colors = listOf(Color.White.copy(alpha = 0.16f + 0.12f * fullness), Color.White.copy(alpha = 0f)),
-            center = hl,
-            radius = orbR * 0.6f,
-        ),
-        radius = orbR * 0.6f,
-        center = hl,
-    )
-    drawCircle(
-        color = lerp(accent, Color.White, 0.3f).copy(alpha = 0.35f + 0.2f * fullness),
-        radius = orbR,
-        center = c,
-        style = Stroke(width = minDim * 0.0035f),
-    )
-
-    // 7. The traveling comet — a glowing dot with a fading tail, one lap per cycle.
+    // 6. The traveling comet — a glowing dot with a fading tail, one lap per cycle.
     if (runFactor > 0.01f) {
         val cometCol = lerp(accent, HalcyonMint, 0.5f)
         val dotR = minDim * 0.012f

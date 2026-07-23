@@ -12,8 +12,8 @@ android {
         applicationId = "org.soulstone.halcyon"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "0.2.0"
+        versionCode = 3
+        versionName = "0.3.0"
     }
 
     // Fixed debug keystore committed to the repo (a debug key is non-secret — its
