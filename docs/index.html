@@ -79,6 +79,30 @@
 		padding: 0.4em 0.2em;
 	}
 	.links a:hover { color: var(--green); }
+
+	/* Tor onion mirror. Lives inside .links so it inherits the fade-out while a
+	   breathing session runs. Wraps rather than overflowing the fixed corner. */
+	.onion-line {
+		margin-top: 0.7em;
+		max-width: min(80vw, 32em);
+		margin-left: auto;
+		text-align: right;
+		font-size: 0.6rem;
+		line-height: 1.5;
+	}
+	.onion-line .onion-label {
+		display: block;
+		color: var(--subtext);
+		opacity: 0.6;
+	}
+	.onion-line a {
+		word-break: break-all;
+		-webkit-user-select: all;
+		user-select: all;
+		color: var(--subtext);
+		opacity: 0.8;
+		padding: 0;
+	}
 	.links span { color: var(--subtext); opacity: 0.6; padding: 0 0.3em; }
 	body.running .wordmark, body.running .links { opacity: 0.16; }
 
@@ -177,6 +201,10 @@
 
 <div class="links">
 	<a href="https://github.com/KaraZajac/HALCYON" rel="noopener">source ↗</a><span>·</span><a href="https://netslum.io" rel="noopener">netslum.io</a>
+	<div class="onion-line">
+		<span class="onion-label">Also on Tor</span>
+		<a href="http://6kxjxbwg7n55dsiizu2ocnbbw3fmdcwdqlwdvyzhrp3gsn6isvdspoyd.onion">6kxjxbwg7n55dsiizu2ocnbbw3fmdcwdqlwdvyzhrp3gsn6isvdspoyd.onion</a>
+	</div>
 </div>
 
 <script>
