@@ -7,7 +7,7 @@ field breathes with you — brightening and turning a vivid green as you inhale,
 settling into a muted sage as you exhale. Tap again to stop. That's the whole
 app.
 
-**🌐 Live on the web: [halcyon.netslum.io](https://halcyon.netslum.io)** — the
+**🌐 Live on the web: [halcyon.karazajac.io](https://halcyon.karazajac.io)** — the
 same scene remastered for bigger screens ([`docs/index.html`](docs/index.html),
 a dependency-free canvas port of the same timing model and field). It works
 offline and installs to the home screen as a PWA on iPhone and Android
